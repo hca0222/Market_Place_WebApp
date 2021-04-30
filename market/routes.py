@@ -2,7 +2,7 @@ from market import app, db
 from flask import render_template, redirect, url_for, flash, request
 from market.models import Item, User
 from market.forms import RegisterForm, LoginForm, PurchaseItemForm, SellItemForm
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, current_user
 
 
 @app.route('/')
@@ -13,6 +13,7 @@ def index_page():
 
 @app.route('/market', methods=['GET', 'POST'])
 def market_page():
+    # purchase fn
     purchase_form = PurchaseItemForm()
     sell_form = SellItemForm()
     if request.method == 'POST':
@@ -21,7 +22,13 @@ def market_page():
         if fetch_item:
             fetch_item.buy(current_user)
         return redirect(url_for('market_page'))
-
+    # sell fn
+    sold_item = request.form.get('sold_item')
+    item_to_sell = Item.query.filter_by(name=sold_item).first()
+    if item_to_sell:
+        if current_user.id == item_to_sell.owner:
+            item_to_sell.sell(current_user.id)
+        return redirect(url_for('market_page'))
     if request.method == 'GET':
         owned_items = Item.query.filter_by(owner=current_user.id)
         items = Item.query.filter_by(owner=None)
@@ -32,7 +39,6 @@ def market_page():
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
     form = RegisterForm()
-
     if form.validate_on_submit():
         create_user = User(
             username=form.username.data,
@@ -42,7 +48,6 @@ def register_page():
         db.session.commit()
         login_user(create_user)
         flash(f'Success! You are now Registered! as: {form.username.data}', category='success')
-        return redirect(url_for('market_page'))
         return redirect(url_for('market_page'))
     if form.errors != {}:
         for err_msg in form.errors.values():

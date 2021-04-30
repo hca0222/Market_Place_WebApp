@@ -49,3 +49,8 @@ class Item(db.Model):
                   category='success')
         else:
             flash("Insufficient Balance!", category='danger')
+
+    def sell(self, user):
+        self.owner = None
+        user.balance += self.price
+        db.session.commit()
