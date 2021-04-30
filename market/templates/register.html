@@ -2,9 +2,19 @@
 {% block title %} Register Page {% endblock %}
 
 {% block content %}
-<h1>Register Form</h1>
+
+
 <div class="container">
-    <form method="POST" class="form-register" style="color:white">
+
+    <img class="rounded mx-auto d-block" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/84741a7a-f90c-45da-957a-e7eaaae36507/d9skwc9-5bd47362-2f3b-46bc-a454-5111e55bb869.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzg0NzQxYTdhLWY5MGMtNDVkYS05NTdhLWU3ZWFhYWUzNjUwN1wvZDlza3djOS01YmQ0NzM2Mi0yZjNiLTQ2YmMtYTQ1NC01MTExZTU1YmI4NjkucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.hHrZyXj1rr8Ml163p-2_NYqoy6SF1XwbRTD_nFpwjoE" alt="">
+            <h1 class="h3 mb-3 font-weight-normal text-center">
+                Please fill up form to register
+            </h1>
+
+    </br>
+
+    <form method="POST" class="form-register text-center" style="color:white">
+        {{ form.hidden_tag() }}
         {{ form.username.label() }}
         {{ form.username(class="form-control", placeholder="Username") }}
 
@@ -16,9 +26,12 @@
 
         {{ form.confirm_password.label() }}
         {{ form.confirm_password(class="form-control", placeholder="Password") }}
-
-        {{ form.submit.label() }}
-        {{ form.submit(class="form-control btn btn-primary", placeholder="Username") }}
+        </br>
+        {{ form.submit(class="form-control btn btn-primary", placeholder="") }}
     </form>
+    <br>
+    <p class="float-right">Already have an account?
+        <a class="btn-secondary btn-sm" href="{{ url_for('login_page') }}">Login</a>
+    </p>
 </div>
 {% endblock %}
