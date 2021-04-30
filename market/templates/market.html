@@ -27,6 +27,7 @@ Market Page
                 <td>{{ item.name }}</td>
                 <td>{{ item.barcode }}</td>
                 <td>{{ item.price }}$</td>
+
                 <td>
                     <button class="btn btn-outline btn-info" data-toggle="modal"
                             data-target="#Modal-MoreInfo-{{ item.id }}">More Info
@@ -43,19 +44,22 @@ Market Page
 
     <div class="col-4">
         <h2>Inventory</h2>
+        <br>
         <div class="row">
-            {% for item in owned_items %}
+            {% for owned_item in owned_items %}
             {% include 'includes/owned_items_modals.html' %}
             <div class="col-md-6">
-                <div style="margin:auto" class="card text-center bg-dark">
+                <div style="margin-bottom: 5px" class="card text-center bg-dark">
                     <div class="card-body">
-                        <h5 class="card-title">{{ item.name }}</h5>
-                        <button type="button" class="btn btn-outline-danger" style="margin-bottom:auto"
-                                data-toggle="modal" data-target="#Modal-SellConfirm-{{ item.id }}">
+                        <h5 class="card-title">{{ owned_item.name }}</h5>
+                        <p class="card-text text-left">
+                            Price: ₱{{ owned_item.price }} <br>
+                            Description: {{ owned_item.description }}
+                       </p>
+                        <button type="button" class="btn btn-outline-danger" style="margin-bottom: 5px"
+                                data-toggle="modal" data-target="#Modal-SellingConfirm-{{ owned_item.id }}">
                             Sell this Item
                         </button>
-                        <p class="card-text"><strong>Price: ₱{{ item.price }}</strong></p>
-                        <p class="card-text"><strong>Description: {{ item.description }}</strong></p>
                     </div>
                 </div>
             </div>

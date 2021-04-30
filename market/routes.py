@@ -15,25 +15,31 @@ def index_page():
 def market_page():
     # purchase fn
     purchase_form = PurchaseItemForm()
-    sell_form = SellItemForm()
+    selling_form = SellItemForm()
     if request.method == 'POST':
         purchased_item = request.form.get('purchased_item')
         fetch_item = Item.query.filter_by(name=purchased_item).first()
         if fetch_item:
             fetch_item.buy(current_user)
+            flash(f"Congratulations! You bought {fetch_item.name} for ₱{fetch_item.price}", category='success')
+            return redirect(url_for('market_page'))
+        # Sell fn
+        sold_item = request.form.get('sold_item')
+        item_to_sell = Item.query.filter_by(name=sold_item).first()
+        if item_to_sell:
+            if current_user.can_sell(item_to_sell):
+                item_to_sell.sell(current_user)
+                flash(f"Congratulations! You sold {item_to_sell.name} for ₱{item_to_sell.price}", category='success')
+                return redirect(url_for('market_page'))
+            else:
+                flash(f"Something went wrong with selling {item_to_sell.name}", category='danger')
         return redirect(url_for('market_page'))
-    # sell fn
-    sold_item = request.form.get('sold_item')
-    item_to_sell = Item.query.filter_by(name=sold_item).first()
-    if item_to_sell:
-        if current_user.id == item_to_sell.owner:
-            item_to_sell.sell(current_user.id)
-        return redirect(url_for('market_page'))
-    if request.method == 'GET':
-        owned_items = Item.query.filter_by(owner=current_user.id)
+
+    if request.method == "GET":
         items = Item.query.filter_by(owner=None)
+        owned_items = Item.query.filter_by(owner=current_user.id)
         return render_template('market.html', items=items, purchase_form=purchase_form, owned_items=owned_items,
-                               sell_form=sell_form)
+                               selling_form=selling_form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
